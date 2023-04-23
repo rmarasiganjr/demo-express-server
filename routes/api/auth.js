@@ -28,12 +28,10 @@ router.post('/signup', (req, res, next) => {
 router.post('/login', (req, res, next) => {
   var email = req.body.email;
   var password = req.body.password;
-
+  console.log(req.body);
   try {
     sqlQuery = `SELECT * FROM account_credentials WHERE email="${email}" AND password="${password}"`;
     dbConn.query(sqlQuery, function (error, results) {
-      console.log(results);
-      console.log(process.env.SECRET_TOKEN);
       // if user does not exist, return error response
       if (results.length === 0) {
         return res.status(401).json({ message: 'Invalid credentials' });
@@ -41,7 +39,7 @@ router.post('/login', (req, res, next) => {
 
       // if user exists, create and sign a JWT
       const token = jwt.sign({ email }, process.env.SECRET_TOKEN);
-
+      console.log(token);
       // send token back to the client
 
       res.status(200).json({ success: true, token: token });
